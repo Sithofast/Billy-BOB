@@ -5,16 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ultima Warriors</title>
   <meta name="description" content="Ultima Warriors — a home base for grown-up gamers. Join our Discord and find all our gaming communities in one place.">
+  <meta name="theme-color" content="#05060f">
+  <!-- Show the intro banner on a visitor's first visit (or with ?intro in the URL). -->
+  <script>
+    try {
+      if (localStorage.getItem("uw-intro-seen") !== "1" || /[?&]intro/.test(location.search)) {
+        document.documentElement.classList.add("show-intro");
+      }
+    } catch (e) {
+      document.documentElement.classList.add("show-intro");
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Shared artwork: the Ultima Warriors mech, reused in the intro and hero. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mech-armor" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2c3970"/>
+        <stop offset=".55" stop-color="#141a3a"/>
+        <stop offset="1" stop-color="#090c1d"/>
+      </linearGradient>
+      <linearGradient id="mech-armor-light" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#40539a"/>
+        <stop offset="1" stop-color="#19214c"/>
+      </linearGradient>
+      <radialGradient id="mech-glow-cyan">
+        <stop offset="0" stop-color="#e9fcff"/>
+        <stop offset=".35" stop-color="#3ee0ff"/>
+        <stop offset="1" stop-color="#3ee0ff" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="mech-thrust" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff3dc"/>
+        <stop offset=".3" stop-color="#ff8a3d"/>
+        <stop offset="1" stop-color="#ff3d6e" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <symbol id="mech" viewBox="0 0 400 560">
+      <!-- boot thrusters -->
+      <g fill="url(#mech-thrust)">
+        <polygon points="118,494 198,494 172,558 144,558"/>
+        <polygon points="202,494 282,494 256,558 228,558"/>
+        <animate attributeName="opacity" values=".65;1;.8;1;.65" dur=".5s" repeatCount="indefinite"/>
+      </g>
+      <g stroke="#7a95ff" stroke-opacity=".45" stroke-width="1.5" stroke-linejoin="round">
+        <!-- legs -->
+        <polygon points="144,288 182,288 180,352 146,352" fill="url(#mech-armor)"/>
+        <polygon points="138,348 184,348 180,378 142,378" fill="url(#mech-armor-light)"/>
+        <polygon points="142,376 180,376 190,470 132,470" fill="url(#mech-armor)"/>
+        <polygon points="120,468 196,468 204,494 112,494" fill="url(#mech-armor-light)"/>
+        <polygon points="256,288 218,288 220,352 254,352" fill="url(#mech-armor)"/>
+        <polygon points="262,348 216,348 220,378 258,378" fill="url(#mech-armor-light)"/>
+        <polygon points="258,376 220,376 210,470 268,470" fill="url(#mech-armor)"/>
+        <polygon points="280,468 204,468 196,494 288,494" fill="url(#mech-armor-light)"/>
+        <!-- hips and waist -->
+        <polygon points="146,246 192,246 188,298 150,290" fill="url(#mech-armor-light)"/>
+        <polygon points="254,246 208,246 212,298 250,290" fill="url(#mech-armor-light)"/>
+        <polygon points="160,222 240,222 234,252 166,252" fill="url(#mech-armor)"/>
+        <!-- torso -->
+        <polygon points="148,104 252,104 270,152 254,224 146,224 130,152" fill="url(#mech-armor)"/>
+        <polygon points="160,114 196,114 196,160 150,152" fill="url(#mech-armor-light)"/>
+        <polygon points="240,114 204,114 204,160 250,152" fill="url(#mech-armor-light)"/>
+        <!-- left arm -->
+        <polygon points="86,160 122,160 118,222 90,222" fill="url(#mech-armor)"/>
+        <polygon points="78,220 126,220 130,292 74,292" fill="url(#mech-armor-light)"/>
+        <polygon points="84,292 120,292 116,318 88,318" fill="url(#mech-armor)"/>
+        <!-- right arm with cannon -->
+        <polygon points="278,160 314,160 310,222 282,222" fill="url(#mech-armor)"/>
+        <polygon points="272,220 328,220 334,286 266,286" fill="url(#mech-armor-light)"/>
+        <polygon points="284,286 316,286 312,370 288,370" fill="url(#mech-armor)"/>
+        <!-- shoulders -->
+        <polygon points="150,98 98,92 70,122 80,164 132,154" fill="url(#mech-armor-light)"/>
+        <polygon points="250,98 302,92 330,122 320,164 268,154" fill="url(#mech-armor-light)"/>
+        <!-- neck and head -->
+        <rect x="186" y="88" width="28" height="18" fill="#10152e"/>
+        <polygon points="196,54 158,12 176,52" fill="url(#mech-armor-light)"/>
+        <polygon points="204,54 242,12 224,52" fill="url(#mech-armor-light)"/>
+        <polygon points="176,50 224,50 232,70 224,94 176,94 168,70" fill="url(#mech-armor)"/>
+      </g>
+      <!-- shoulder stripes -->
+      <path d="M86 130 L130 122 M314 130 L270 122" stroke="#ff8a3d" stroke-width="4" stroke-linecap="round"/>
+      <!-- panel lines -->
+      <path d="M170 196 H230 M174 210 H226" stroke="#3ee0ff" stroke-opacity=".35" stroke-width="2"/>
+      <!-- glowing parts -->
+      <g>
+        <ellipse cx="200" cy="72" rx="34" ry="14" fill="url(#mech-glow-cyan)" opacity=".7"/>
+        <polygon points="180,66 220,66 213,78 187,78" fill="#3ee0ff"/>
+        <circle cx="200" cy="178" r="20" fill="url(#mech-glow-cyan)"/>
+        <circle cx="200" cy="178" r="6" fill="#e9fcff"/>
+        <circle cx="300" cy="374" r="16" fill="url(#mech-glow-cyan)"/>
+        <circle cx="161" cy="363" r="3" fill="#3ee0ff"/>
+        <circle cx="239" cy="363" r="3" fill="#3ee0ff"/>
+        <animate attributeName="opacity" values=".75;1;.75" dur="2.6s" repeatCount="indefinite"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <!-- First-visit intro banner -->
+  <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+    <div class="intro-stars" aria-hidden="true"></div>
+    <div class="intro-glow" aria-hidden="true"></div>
+    <svg class="intro-mech" viewBox="0 0 400 560" aria-hidden="true"><use href="#mech"/></svg>
+    <div class="intro-content">
+      <p class="intro-hud">// Systems online · Pilots wanted</p>
+      <h2 class="intro-title" id="intro-title"><span>Ultima</span> <span>Warriors</span></h2>
+      <p class="intro-sub">Grown-up gamers. Giant robots. One crew.</p>
+      <button type="button" class="btn btn-discord intro-enter">Enter the hangar</button>
+    </div>
+  </div>
+
+  <canvas id="stars" aria-hidden="true"></canvas>
+
   <header class="site-header">
     <nav class="nav container">
       <a href="#top" class="brand">
-        <span class="brand-mark" aria-hidden="true">⚔</span>
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <polygon points="19,14 5,2 11,14" fill="#40539a"/>
+          <polygon points="21,14 35,2 29,14" fill="#40539a"/>
+          <polygon points="11,13 29,13 32,22 29,35 11,35 8,22" fill="#1c2550" stroke="#7a95ff" stroke-width="1.2"/>
+          <polygon points="13,20 27,20 25,25 15,25" fill="#3ee0ff"/>
+        </svg>
         <span>Ultima Warriors</span>
       </a>
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
@@ -31,24 +145,28 @@
   <main id="top">
     <!-- HERO -->
     <section class="hero">
+      <div class="planet" aria-hidden="true"></div>
       <div class="container hero-inner">
-        <p class="eyebrow">Grown-up gamers · Good company · No drama</p>
-        <h1>Welcome to the<br><span class="accent">Ultima Warriors</span></h1>
-        <p class="lead">
-          A home base for older gamers who still love to play. Started by a father and son
-          who wanted a friendly place to squad up, swap stories, and have fun — and now we're
-          inviting you to join us.
-        </p>
-        <div class="hero-actions">
-          <a href="https://discord.gg/ultimawarriors" class="btn btn-discord" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37A19.8 19.8 0 0 0 15.4 2.85a.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.3 18.3 0 0 0-5.49 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13l.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01l.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.65-1.87.89a.08.08 0 0 0-.04.11c.36.7.77 1.36 1.23 1.99a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/></svg>
-            Join our Discord
-          </a>
-          <a href="#communities" class="btn btn-ghost">See all our communities</a>
+        <div class="hero-text">
+          <p class="eyebrow">Grown-up gamers · Good company · No drama</p>
+          <h1>Welcome to the<br><span class="accent">Ultima Warriors</span></h1>
+          <p class="lead">
+            A home base for older gamers who still love to play. Started by a father and son
+            who wanted a friendly place to squad up, swap stories, and have fun — and now we're
+            inviting you to join us.
+          </p>
+          <div class="hero-actions">
+            <a href="https://discord.gg/ultimawarriors" class="btn btn-discord" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37A19.8 19.8 0 0 0 15.4 2.85a.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.3 18.3 0 0 0-5.49 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13l.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01l.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.65-1.87.89a.08.08 0 0 0-.04.11c.36.7.77 1.36 1.23 1.99a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/></svg>
+              Join our Discord
+            </a>
+            <a href="#communities" class="btn btn-ghost">See all our communities</a>
+          </div>
+          <p class="invite-text"><span>discord.gg/<strong>ultimawarriors</strong></span>
+            <button class="copy-btn" data-copy="https://discord.gg/ultimawarriors">Copy link</button>
+          </p>
         </div>
-        <p class="invite-text"><span>discord.gg/<strong>ultimawarriors</strong></span>
-          <button class="copy-btn" data-copy="https://discord.gg/ultimawarriors">Copy link</button>
-        </p>
+        <svg class="hero-mech" viewBox="0 0 400 560" aria-hidden="true"><use href="#mech"/></svg>
       </div>
     </section>
 
@@ -119,7 +237,7 @@
     <section class="section cta">
       <div class="container cta-inner">
         <h2>Ready to join the warriors?</h2>
-        <p>Come say hello — there's a seat at the table for you.</p>
+        <p>Suit up and come say hello — there's a cockpit waiting for you.</p>
         <a href="https://discord.gg/ultimawarriors" class="btn btn-discord" target="_blank" rel="noopener">Join discord.gg/ultimawarriors</a>
       </div>
     </section>
@@ -127,7 +245,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>© <span id="year"></span> Ultima Warriors · Made by gamers, for gamers.</p>
+      <p>© <span id="year"></span> Ultima Warriors · Made by gamers, for gamers. · <a href="?intro">Replay intro</a></p>
     </div>
   </footer>
 

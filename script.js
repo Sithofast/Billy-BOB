@@ -138,8 +138,91 @@ function setupCopy() {
   });
 }
 
+function setupIntro() {
+  const intro = document.getElementById("intro");
+  const root = document.documentElement;
+  if (!root.classList.contains("show-intro")) {
+    intro.remove();
+    return;
+  }
+  const enter = intro.querySelector(".intro-enter");
+  const close = () => {
+    if (intro.classList.contains("closing")) return;
+    intro.classList.add("closing");
+    try { localStorage.setItem("uw-intro-seen", "1"); } catch {}
+    document.removeEventListener("keydown", onKey);
+    setTimeout(() => {
+      root.classList.remove("show-intro");
+      intro.remove();
+    }, 700);
+  };
+  const onKey = (e) => {
+    if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      close();
+    }
+  };
+  intro.addEventListener("click", close);
+  document.addEventListener("keydown", onKey);
+  enter.focus({ preventScroll: true });
+}
+
+function startStarfield() {
+  const canvas = document.getElementById("stars");
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let stars = [];
+  let width = 0;
+  let height = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const count = Math.round((width * height) / 2600);
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      depth: Math.random() * 0.8 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+    }));
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, width, height);
+    for (const s of stars) {
+      if (!reduceMotion) {
+        s.y += s.depth * 0.18;
+        if (s.y > height) {
+          s.y = 0;
+          s.x = Math.random() * width;
+        }
+      }
+      const twinkle = 0.5 + 0.5 * Math.sin(s.phase + time * 0.002 * s.depth);
+      ctx.globalAlpha = 0.25 + 0.75 * twinkle * s.depth;
+      ctx.fillStyle = s.depth > 0.85 ? "#bfe9ff" : "#ffffff";
+      const size = s.depth * 1.8;
+      ctx.fillRect(s.x, s.y, size, size);
+    }
+    if (!reduceMotion) requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduceMotion) draw(0);
+  });
+  resize();
+  if (reduceMotion) draw(0);
+  else requestAnimationFrame(draw);
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCommunities();
 renderGames();
 setupNav();
 setupCopy();
+setupIntro();
+startStarfield();

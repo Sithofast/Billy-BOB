@@ -13,6 +13,10 @@ It's a plain static site — just `index.html`, `styles.css`, and `script.js`. N
 - **Change the games list**: edit `GAMES` in `script.js`.
 - **Change the story, rules, or text**: edit `index.html`.
 - **Change colors**: edit the variables at the top of `styles.css`.
+- **Intro banner**: first-time visitors see a full-screen "Ultima Warriors" intro. It only
+  shows once per browser. To see it again, add `?intro` to the end of the address
+  (or click "Replay intro" in the footer). Its text is in the `intro` section of `index.html`.
+- **The mech artwork**: it's drawn in the `<symbol id="mech">` block near the top of `index.html`.
 
 ## Preview locally
 
