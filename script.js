@@ -23,9 +23,10 @@ const COMMUNITIES = [
   {
     name: "Twitch",
     icon: "📺",
-    description: "Catch us live and hang out in chat.",
-    url: "",
-    cta: "Watch live",
+    description: "Watch Harebrn stream, then hang out in chat.",
+    url: "https://twitch.tv/Harebrn",
+    cta: "Watch on Twitch",
+    twitch: true, // shows his profile picture and a LIVE badge when he's streaming
   },
   {
     name: "Facebook Group",
@@ -54,6 +55,9 @@ const COMMUNITIES = [
 // 1. In Discord: Server Settings → Widget → turn on "Enable Server Widget".
 // 2. Copy the "Server ID" shown on that page and paste it between the quotes.
 const DISCORD_SERVER_ID = "969042661656915968";
+
+// Twitch channel shown in the "On the air" section (just the name after twitch.tv/).
+const TWITCH_CHANNEL = "Harebrn";
 
 // Games the community plays.
 const GAMES = [
@@ -91,6 +95,14 @@ function renderCommunities() {
     action.className = "card-cta";
     action.textContent = live ? `${c.cta} →` : "Coming soon";
     card.append(icon, title, desc, action);
+    if (c.twitch) {
+      card.classList.add("card-twitch");
+      icon.classList.add("twitch-avatar-slot");
+      const liveBadge = document.createElement("span");
+      liveBadge.className = "live-badge";
+      liveBadge.textContent = "Live";
+      card.append(liveBadge);
+    }
     if (c.featured) {
       const badge = document.createElement("span");
       badge.className = "badge";
@@ -375,6 +387,178 @@ function startDiscordWidget() {
   if (DISCORD_SERVER_ID) setInterval(loadDiscordWidget, 60000); // refresh every minute
 }
 
+// ---------- Twitch: profile, live status, player and past streams ----------
+// Profile picture, stream title, game and past streams come from decapi.me, a
+// free public helper for Twitch info. Twitch's own player reports live/offline.
+const twitch = { live: null, player: null, replays: [], picked: false };
+
+function twitchInfo(path, query = "") {
+  return fetch(`https://decapi.me/twitch/${path}/${encodeURIComponent(TWITCH_CHANNEL)}${query}`)
+    .then((res) => (res.ok ? res.text() : ""))
+    .then((text) => text.trim())
+    .catch(() => "");
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function setTwitchLive(isLive) {
+  if (twitch.live === isLive) return;
+  twitch.live = isLive;
+  document.querySelectorAll(".card-twitch, #stream, .nav-stream").forEach((el) =>
+    el.classList.toggle("is-live", isLive)
+  );
+  setText("tw-status", isLive ? "Live now" : "Offline");
+  if (isLive) {
+    twitchInfo("title").then((t) => setText("tw-title", t));
+    twitchInfo("game").then((g) => setText("tw-game", g ? `Playing ${g}` : ""));
+    if (twitch.player && !twitch.picked) watchLive();
+  } else {
+    setText("tw-game", "");
+    offlineMessage();
+    playLatestReplay();
+  }
+  renderReplays();
+}
+
+function offlineMessage() {
+  if (twitch.live !== false) return;
+  setText("tw-title", twitch.replays.length
+    ? "Not live right now — catch up on his past streams below."
+    : "Not live right now — follow on Twitch to catch the next stream.");
+}
+
+function showTwitchAvatar(url) {
+  if (!/^https:\/\//.test(url)) return; // decapi returns an error message instead of a URL if something's wrong
+  document.querySelectorAll(".twitch-avatar-slot, #tw-avatar").forEach((slot) => {
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "";
+    img.referrerPolicy = "no-referrer";
+    img.addEventListener("load", () => slot.classList.add("has-img"));
+    img.addEventListener("error", () => img.remove());
+    slot.append(img);
+  });
+}
+
+// decapi lists videos as "Title - https://www.twitch.tv/videos/123" entries
+function parseReplays(text) {
+  const found = [];
+  const pattern = /(?:^|\n|\s\|\s)\s*(.*?)\s+-\s+(https?:\/\/(?:www\.)?twitch\.tv\/videos\/(\d+))/g;
+  let m;
+  while ((m = pattern.exec(text))) found.push({ title: m[1] || "Past stream", url: m[2], id: m[3] });
+  return found;
+}
+
+function watchLive() {
+  if (!twitch.player) return;
+  twitch.player.setChannel(TWITCH_CHANNEL);
+  twitch.current = "live";
+  setText("tw-now", "Now showing: live stream");
+  renderReplays();
+}
+
+function watchReplay(replay) {
+  if (!twitch.player) return;
+  twitch.player.setVideo(`v${replay.id}`, 0);
+  twitch.current = replay.id;
+  setText("tw-now", `Now showing replay: ${replay.title}`);
+  renderReplays();
+}
+
+function playLatestReplay() {
+  if (twitch.live === false && !twitch.picked && twitch.player && twitch.replays.length && twitch.current !== twitch.replays[0].id) {
+    watchReplay(twitch.replays[0]);
+  }
+}
+
+function renderReplays() {
+  const list = document.getElementById("tw-replays");
+  if (!list) return;
+  list.innerHTML = "";
+  const items = [];
+  if (twitch.live) items.push({ live: true, title: "Watch live now", url: `https://twitch.tv/${TWITCH_CHANNEL}` });
+  items.push(...twitch.replays);
+  if (!items.length) {
+    const p = document.createElement("p");
+    p.className = "tw-empty";
+    p.textContent = "No past streams to show yet.";
+    list.append(p);
+    return;
+  }
+  for (const item of items) {
+    const a = document.createElement("a");
+    a.className = "tw-replay" + (item.live ? " tw-replay-live" : "");
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    if ((item.live && twitch.current === "live") || item.id === twitch.current) a.classList.add("is-playing");
+    const icon = document.createElement("span");
+    icon.className = "tw-replay-icon";
+    icon.textContent = item.live ? "●" : "▶";
+    const title = document.createElement("span");
+    title.className = "tw-replay-title";
+    title.textContent = item.title;
+    a.append(icon, title);
+    a.addEventListener("click", (e) => {
+      if (!twitch.player) return; // no embedded player: open on Twitch instead
+      e.preventDefault();
+      twitch.picked = true;
+      item.live ? watchLive() : watchReplay(item);
+      document.getElementById("twitch-player").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    list.append(a);
+  }
+}
+
+function loadTwitchPlayer() {
+  const host = window.location.hostname;
+  const box = document.getElementById("twitch-player");
+  if (!box || !host) return; // Twitch's player only runs on a real website, not a file opened from disk
+  const script = document.createElement("script");
+  script.src = "https://player.twitch.tv/js/embed/v1.js";
+  script.addEventListener("load", () => {
+    const player = new window.Twitch.Player("twitch-player", {
+      channel: TWITCH_CHANNEL,
+      width: "100%",
+      height: "100%",
+      parent: [host],
+      autoplay: false,
+      muted: true,
+    });
+    twitch.player = player;
+    twitch.current = "live";
+    player.addEventListener(window.Twitch.Player.ONLINE, () => setTwitchLive(true));
+    player.addEventListener(window.Twitch.Player.OFFLINE, () => setTwitchLive(false));
+    box.classList.add("has-player");
+    playLatestReplay();
+    renderReplays();
+  });
+  document.head.append(script);
+}
+
+async function checkTwitchLive() {
+  const uptime = await twitchInfo("uptime");
+  if (/offline/i.test(uptime)) setTwitchLive(false);
+  else if (uptime && !/error|not found|invalid/i.test(uptime)) setTwitchLive(true);
+}
+
+async function startTwitch() {
+  if (!TWITCH_CHANNEL) return;
+  document.querySelectorAll("[data-twitch-link]").forEach((a) => (a.href = `https://twitch.tv/${TWITCH_CHANNEL}`));
+  setText("tw-name", TWITCH_CHANNEL);
+  loadTwitchPlayer();
+  twitchInfo("avatar").then(showTwitchAvatar);
+  twitch.replays = parseReplays(await twitchInfo("videos", "?limit=6"));
+  renderReplays();
+  offlineMessage();
+  playLatestReplay();
+  checkTwitchLive();
+  setInterval(checkTwitchLive, 120000); // re-check every 2 minutes
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCommunities();
 renderGames();
@@ -384,3 +568,4 @@ hideMissingImages();
 setupIntro();
 startStarfield();
 startDiscordWidget();
+startTwitch();

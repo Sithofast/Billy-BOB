@@ -11,6 +11,10 @@ It's a plain static site — just `index.html`, `styles.css`, and `script.js`. N
   the `COMMUNITIES` list at the top. Put the link in `url`. Entries with an empty `url`
   show as "Coming soon".
 - **Change the games list**: edit `GAMES` in `script.js`.
+- **Twitch**: the "On the air" section and the Twitch card follow `TWITCH_CHANNEL` in
+  `script.js`. When the channel is live it shows the stream with LIVE badges; when offline it
+  plays the latest past broadcast and lists recent ones. Twitch only keeps past broadcasts if
+  "Store past broadcasts" is on in the Twitch creator settings.
 - **Turn on the live Discord widget**: in Discord go to Server Settings → Widget, switch on
   "Enable Server Widget", copy the Server ID, and paste it into `DISCORD_SERVER_ID` near the
   top of `script.js`. Until then the widget shows a friendly "coming soon" message.

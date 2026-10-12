@@ -53,6 +53,7 @@
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav-links">
         <li><a href="#live">Live</a></li>
+        <li><a href="#stream" class="nav-stream">Stream</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#communities">Communities</a></li>
         <li><a href="#games">Games</a></li>
@@ -114,6 +115,40 @@
           <div class="dw-body" id="dw-body">
             <p class="dw-message">Connecting to Discord…</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TWITCH STREAM (filled in by script.js) -->
+    <section id="stream" class="section">
+      <div class="container stream-grid">
+        <div class="stream-info">
+          <p class="eyebrow">On the air</p>
+          <h2>Catch the stream</h2>
+          <div class="tw-profile">
+            <span class="tw-avatar" id="tw-avatar" aria-hidden="true">H</span>
+            <div>
+              <div class="tw-name"><span id="tw-name">Harebrn</span> <span class="live-pill" id="tw-status">Offline</span></div>
+              <div class="tw-meta" id="tw-game"></div>
+            </div>
+          </div>
+          <p class="tw-title" id="tw-title">Follow on Twitch so you never miss a stream.</p>
+          <div class="hero-actions">
+            <a href="https://twitch.tv/Harebrn" class="btn btn-twitch" data-twitch-link target="_blank" rel="noopener">Watch on Twitch</a>
+          </div>
+        </div>
+        <div class="tw-player" id="twitch-player">
+          <a href="https://twitch.tv/Harebrn" class="tw-player-fallback" data-twitch-link target="_blank" rel="noopener">
+            <span class="tw-play" aria-hidden="true">▶</span>
+            <span>Watch Harebrn on Twitch</span>
+          </a>
+        </div>
+        <div class="tw-replays-wrap">
+          <div class="tw-replays-head">
+            <h3 class="dw-heading">Past streams</h3>
+            <span class="tw-now" id="tw-now" aria-live="polite"></span>
+          </div>
+          <div class="tw-replays" id="tw-replays"></div>
         </div>
       </div>
     </section>
