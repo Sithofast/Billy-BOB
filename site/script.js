@@ -29,25 +29,11 @@ const COMMUNITIES = [
     twitch: true, // shows his profile picture and a LIVE badge when he's streaming
   },
   {
-    name: "Facebook Group",
-    icon: "👥",
-    description: "News, events, and photos for the whole crew.",
-    url: "",
-    cta: "Join the group",
-  },
-  {
     name: "Steam Group",
     icon: "🎮",
     description: "Find us on Steam and join group events.",
     url: "https://steamcommunity.com/groups/ultimawarriors",
     cta: "Join on Steam",
-  },
-  {
-    name: "Xbox / PlayStation",
-    icon: "🕹️",
-    description: "Console clubs so you can squad up on any platform.",
-    url: "",
-    cta: "Join the club",
   },
 ];
 
