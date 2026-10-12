@@ -516,7 +516,7 @@ a.card-featured:hover { border-color: var(--cyan); box-shadow: 0 0 40px rgba(62,
 .game-chip.open .game-card { opacity: 1; visibility: visible; transform: none; }
 @media (hover: hover) {
   .game-chip:hover .game-card { opacity: 1; visibility: visible; transform: none; }
-  /* leave room for the card so it never covers the House Rules section */
+  /* leave room for the card so it never covers the next section */
   #games { padding-bottom: 210px; }
 }
 /* Touch screens: the card opens in place below the game and pushes the others
