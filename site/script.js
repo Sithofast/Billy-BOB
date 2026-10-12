@@ -146,13 +146,22 @@ function renderCommunities() {
   }
 }
 
+// "World of Warcraft: Forever" → "world-of-warcraft-forever" (forum board address)
+function slugify(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50);
+}
+
 function renderGames() {
   const list = document.getElementById("game-list");
   if (!list) return;
   list.innerHTML = "";
   for (const g of GAMES) {
     const li = document.createElement("li");
-    li.textContent = g;
+    const link = document.createElement("a");
+    link.href = `forum.html#/c/${slugify(g)}`;
+    link.textContent = g;
+    link.title = `${g} forum board`;
+    li.append(link);
     list.append(li);
   }
 }
