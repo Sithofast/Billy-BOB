@@ -13,6 +13,41 @@ const COMMUNITIES = [
     cta: "Join the server",
     featured: true,
   },
+  {
+    name: "YouTube",
+    icon: "▶️",
+    description: "Highlights, funny moments, and game night recaps.",
+    url: "",
+    cta: "Watch",
+  },
+  {
+    name: "Twitch",
+    icon: "📺",
+    description: "Catch us live and hang out in chat.",
+    url: "",
+    cta: "Watch live",
+  },
+  {
+    name: "Facebook Group",
+    icon: "👥",
+    description: "News, events, and photos for the whole crew.",
+    url: "",
+    cta: "Join the group",
+  },
+  {
+    name: "Steam Group",
+    icon: "🎮",
+    description: "Find us on Steam and join group events.",
+    url: "",
+    cta: "Join on Steam",
+  },
+  {
+    name: "Xbox / PlayStation",
+    icon: "🕹️",
+    description: "Console clubs so you can squad up on any platform.",
+    url: "",
+    cta: "Join the club",
+  },
 ];
 
 // Games the community plays.
@@ -21,7 +56,7 @@ const GAMES = [
   "World of Warcraft: Forever",
   "Farming Simulator",
   "Conan Exiles",
-  "Star Wars:Galaxies",
+  "Star Wars Galaxies",
 ];
 
 // ============================================================
