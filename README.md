@@ -36,8 +36,11 @@ It's a plain static site — just `index.html`, `styles.css`, and `script.js`. N
      A form called **support** appears there.
   2. To get each message by email: **Site configuration → Notifications → Emails and webhooks →
      Form submission notifications → Add notification → Email notification**.
-  3. To automate later: add an **Outgoing webhook** in the same place to send messages to a
-     Discord channel, Zapier, or a helpdesk tool.
+  3. **Messages in Discord**: `netlify/functions/submission-created.js` posts every support
+     message into a Discord channel. In Discord: channel settings → **Integrations → Webhooks →
+     New Webhook → Copy Webhook URL**. In Netlify: **Site configuration → Environment variables →
+     Add a variable**, key `DISCORD_SUPPORT_WEBHOOK_URL`, value = that URL. Redeploy once.
+     (Functions only run when Netlify deploys from GitHub, not from drag-and-drop uploads.)
   The form only sends on the live Netlify site; testing locally shows the "didn't send" message.
 
 ## Preview locally
@@ -50,7 +53,13 @@ python3 -m http.server 8000
 
 then visit http://localhost:8000.
 
-## Publish for free with GitHub Pages
+## Deploying (Netlify, linked to GitHub)
+
+The site deploys automatically from this GitHub repository: every change pushed to the
+production branch goes live within a minute or two. `netlify.toml` tells Netlify there's no build
+step and where the functions live.
+
+## Publish for free with GitHub Pages (alternative)
 
 1. On GitHub, go to **Settings → Pages**.
 2. Under **Build and deployment**, choose **Deploy from a branch**.

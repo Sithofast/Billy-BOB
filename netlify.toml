@@ -1,0 +1,13 @@
+# Netlify settings for deploying straight from GitHub.
+# The site is plain HTML/CSS/JS, so there's no build step: Netlify publishes
+# the files as they are and picks up the serverless functions folder.
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Keep repo housekeeping files off the public site
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
