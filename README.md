@@ -31,7 +31,7 @@ All of these are in `site/`:
   "Store past broadcasts" is on in the Twitch creator settings.
 - **Live Discord widget**: uses `DISCORD_SERVER_ID` in `script.js` (Server Settings → Widget →
   "Enable Server Widget" must be on in Discord).
-- **Change the story, rules, or text**: edit `index.html`.
+- **Change the story, "What we're about" blurb, or other text**: edit `index.html`.
 - **Change colors**: edit the variables at the top of `styles.css`.
 - **Intro banner**: first-time visitors see a full-screen "Ultima Warriors" intro, with clouds
   drifting across the planet, a glowing atmosphere and the mech floating in front. After it closes
