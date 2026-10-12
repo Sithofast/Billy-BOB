@@ -218,13 +218,14 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
   position: relative; width: 100%; max-width: 900px;
 }
 .intro::after { /* darken the bottom so the title stays readable over the mech */
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 55%; pointer-events: none;
-  background: linear-gradient(to bottom, transparent, rgba(3, 4, 11, .92) 60%);
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 60%; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(3, 4, 11, .55) 30%, rgba(3, 4, 11, .94) 70%);
 }
 .intro-content { z-index: 1; }
 .intro-hud {
   font-family: var(--font-display); font-size: .75rem; letter-spacing: .25em; text-transform: uppercase;
   color: var(--orange); margin: 0 0 .8rem; animation: fade-up .6s .9s both;
+  text-shadow: 0 0 6px #000, 0 1px 3px #000, 0 0 16px rgba(0, 0, 0, .9);
 }
 .intro-title {
   font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
@@ -242,7 +243,7 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
   from { opacity: 0; letter-spacing: .5em; filter: blur(8px); }
   to { opacity: 1; letter-spacing: .08em; filter: blur(0); }
 }
-.intro-sub { color: var(--muted); font-size: 1.15rem; margin: 0 0 1.6rem; animation: fade-up .6s 1.7s both; }
+.intro-sub { color: #c9d1f0; text-shadow: 0 1px 6px #000; font-size: 1.15rem; margin: 0 0 1.6rem; animation: fade-up .6s 1.7s both; }
 .intro-enter { font-size: 1.05rem; padding: 1em 2.2em; animation: fade-up .6s 2s both; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 

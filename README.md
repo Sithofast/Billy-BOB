@@ -16,7 +16,8 @@ It's a plain static site — just `index.html`, `styles.css`, and `script.js`. N
 - **Intro banner**: first-time visitors see a full-screen "Ultima Warriors" intro. It only
   shows once per browser. To see it again, add `?intro` to the end of the address
   (or click "Replay intro" in the footer). Its text is in the `intro` section of `index.html`.
-- **The mech artwork**: it's drawn in the `<symbol id="mech">` block near the top of `index.html`.
+- **Artwork**: the realistic space background, intro banner and mech images live in `assets/`.
+  Replace a file there (same name) to swap the picture. See `assets/README.md`.
 
 ## Preview locally
 
