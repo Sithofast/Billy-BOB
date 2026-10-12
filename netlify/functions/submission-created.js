@@ -19,6 +19,22 @@ function clip(value, max) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
+// Pasting on a phone often adds spaces, line breaks, or quotes around the URL,
+// which makes Discord reject it. A real webhook URL never contains any of those.
+function cleanWebhookUrl(value) {
+  return String(value ?? "")
+    .replace(/\s+/g, "")
+    .replace(/^["'<]+|["'>]+$/g, "");
+}
+
+// Describes the saved URL for the logs without revealing the secret token
+function describeWebhookUrl(url) {
+  const match = url.match(/^https:\/\/(?:\w+\.)?discord(?:app)?\.com\/api\/webhooks\/(\d+)\/([\w-]+)$/);
+  if (!match) return "Saved webhook URL doesn't look like https://discord.com/api/webhooks/<number>/<token>";
+  return `Saved webhook ${match[1]} has a ${match[2].length}-character token ` +
+    `(Discord's are usually 68). If the length matches, a character is wrong; copy the URL again from Discord.`;
+}
+
 function buildDiscordMessage(payload) {
   const data = payload.data || {};
   const topic = clip(data.topic || "General question", 200);
@@ -54,7 +70,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: "Not a support form submission; skipped" };
   }
 
-  const webhookUrl = process.env.DISCORD_SUPPORT_WEBHOOK_URL;
+  const webhookUrl = cleanWebhookUrl(process.env.DISCORD_SUPPORT_WEBHOOK_URL);
   if (!webhookUrl) {
     console.warn("DISCORD_SUPPORT_WEBHOOK_URL is not set; message saved in Netlify only.");
     return { statusCode: 200, body: "Discord webhook not configured" };
@@ -68,9 +84,12 @@ exports.handler = async (event) => {
   if (!res.ok) {
     // The message is still saved in Netlify's Forms tab even if Discord fails
     console.error(`Discord webhook failed: ${res.status} ${await res.text()}`);
+    console.error(describeWebhookUrl(webhookUrl));
     return { statusCode: 502, body: "Discord webhook failed" };
   }
   return { statusCode: 200, body: "Posted to Discord" };
 };
 
 exports.buildDiscordMessage = buildDiscordMessage;
+exports.cleanWebhookUrl = cleanWebhookUrl;
+exports.describeWebhookUrl = describeWebhookUrl;
