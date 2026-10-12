@@ -10,13 +10,23 @@ const forum = { user: null, configured: true, authFailed: false };
 function forumCategories() {
   return [
     { slug: "general", name: "General", icon: "💬", desc: "Introductions, chat, game-night plans, and anything else." },
-    ...GAMES.map((game) => ({
-      slug: slugify(game),
-      name: game,
+    ...GAMES.map(gameInfo).map((game) => ({
+      slug: slugify(game.name),
+      name: game.name,
       icon: "🎮",
-      desc: `Tips, squads, stories, and screenshots from ${game}.`,
+      desc: `Tips, squads, stories, and screenshots from ${game.name}.`,
+      url: game.url,
     })),
   ];
+}
+
+// "New to <game>? Official website" banner shown on game boards and topics
+function gameSiteLink(cat) {
+  if (!cat.url) return null;
+  return el("p", { class: "game-site-banner" },
+    el("span", { text: `New to ${cat.name}? ` }),
+    el("a", { href: cat.url, target: "_blank", rel: "noopener", text: "Visit the official website ↗" })
+  );
 }
 
 function findCategory(slug) {
@@ -234,7 +244,8 @@ async function renderBoard(view, slug) {
   view.innerHTML = "";
   const header = el("div", { class: "board-head" },
     el("h2", {}, el("span", { "aria-hidden": "true", text: `${cat.icon} ` }), cat.name),
-    el("p", { class: "section-lead", text: cat.desc })
+    el("p", { class: "section-lead", text: cat.desc }),
+    gameSiteLink(cat)
   );
   const list = el("div", { class: "thread-list" }, el("p", { class: "forum-muted", text: "Loading topics…" }));
   const newTopic = el("details", { class: "new-topic" }, el("summary", { class: "btn btn-ghost", text: "＋ Start a new topic" }));
@@ -325,6 +336,7 @@ async function renderThread(view, slug, id) {
   view.innerHTML = "";
   view.append(
     el("h2", { class: "thread-heading", text: thread.title }),
+    gameSiteLink(cat),
     postCard(thread, { isTopic: true, onDelete: remove() }),
     el("h3", { class: "dw-heading", text: `${replies.length} ${replies.length === 1 ? "reply" : "replies"}` }),
     ...replies.map((r) => postCard(r, { onDelete: remove(r.id) })),

@@ -421,8 +421,6 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
 }
 .post-delete:hover { background: rgba(255, 138, 138, .12); }
 .post-body { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
-.game-list a { color: inherit; text-decoration: none; }
-.game-list a:hover { color: var(--cyan); }
 @media (max-width: 600px) {
   .board-card, .thread-row { grid-template-columns: auto 1fr; }
   .board-meta, .thread-stats { grid-column: 2; align-items: flex-start; text-align: left; flex-direction: row; gap: .8rem; }
@@ -430,12 +428,50 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
 
 /* Games */
 .game-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .8rem; }
-.game-list li {
+.game-chip { position: relative; }
+.game-chip:hover, .game-chip.open, .game-chip:focus-within { z-index: 30; }
+.game-chip-btn {
   --cut: 8px;
-  background: var(--surface); border-left: 3px solid var(--cyan);
-  padding: .55em 1.2em; font-weight: 600;
+  background: var(--surface); border: 0; border-left: 3px solid var(--cyan); color: var(--text);
+  padding: .55em 1.2em; font: inherit; font-weight: 600; cursor: pointer;
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transition: background .15s, color .15s;
 }
+.game-chip-btn::after { content: " ▾"; color: var(--cyan); font-size: .8em; }
+.game-chip-btn:hover, .game-chip.open .game-chip-btn { background: rgba(62, 224, 255, .15); color: var(--cyan); }
+.game-chip-btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+.game-card {
+  position: absolute; top: calc(100% + 10px); left: 0; z-index: 20; width: min(320px, 86vw);
+  padding: 1.1rem 1.2rem; background: #0a0d20; border: 1px solid var(--cyan);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .6), 0 0 24px rgba(62, 224, 255, .2);
+  opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .15s, transform .15s, visibility .15s;
+}
+.game-card::before { /* invisible bridge so the card stays open while moving the mouse onto it */
+  content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px;
+}
+.game-card strong { display: block; font-size: 1.05rem; margin-bottom: .35rem; }
+.game-card p { margin: 0 0 .9rem; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.game-card-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.game-card-actions a:not(.btn) { color: var(--cyan); font-weight: 600; text-decoration: none; font-size: .92rem; }
+.game-card-actions a:not(.btn):hover { text-decoration: underline; }
+.game-chip.align-right .game-card { left: auto; right: 0; }
+.game-chip.open .game-card { opacity: 1; visibility: visible; transform: none; }
+@media (hover: hover) {
+  .game-chip:hover .game-card { opacity: 1; visibility: visible; transform: none; }
+}
+/* Touch screens: the card opens in place below the game and pushes the others
+   down, instead of floating over them */
+@media (hover: none) {
+  .game-chip.open { flex-basis: 100%; }
+  .game-chip .game-card { position: static; display: none; width: auto; margin-top: .6rem; transform: none; }
+  .game-chip .game-card::before { display: none; }
+  .game-chip.open .game-card { display: block; }
+}
+.game-site-banner {
+  margin: 0 0 1.2rem; padding: .7rem 1rem; background: rgba(62, 224, 255, .08); border-left: 3px solid var(--cyan);
+  color: var(--muted);
+}
+.game-site-banner a { font-weight: 700; }
 
 /* Rules */
 .rules { max-width: 760px; padding-left: 1.3em; margin: 0; }
