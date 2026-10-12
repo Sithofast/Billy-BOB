@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support · Ultima Warriors</title>
+  <meta name="description" content="Get help with the Ultima Warriors community: FAQ, Discord help, and a contact form.">
+  <meta name="theme-color" content="#05060f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="space-bg" aria-hidden="true"></div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="brand">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <polygon points="19,14 5,2 11,14" fill="#40539a"/>
+          <polygon points="21,14 35,2 29,14" fill="#40539a"/>
+          <polygon points="11,13 29,13 32,22 29,35 11,35 8,22" fill="#1c2550" stroke="#7a95ff" stroke-width="1.2"/>
+          <polygon points="13,20 27,20 25,25 15,25" fill="#3ee0ff"/>
+        </svg>
+        <span>Ultima Warriors</span>
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html#live">Live</a></li>
+        <li><a href="index.html#stream" class="nav-stream">Stream</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#communities">Communities</a></li>
+        <li><a href="index.html#games">Games</a></li>
+        <li><a href="index.html#rules">House Rules</a></li>
+        <li><a href="support.html" aria-current="page">Support</a></li>
+        <li><a href="https://discord.gg/ultimawarriors" class="btn btn-small" target="_blank" rel="noopener">Join Discord</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- SUPPORT HEADER -->
+    <section class="section support-hero">
+      <div class="container">
+        <p class="eyebrow">Support</p>
+        <h1>How can we <span class="accent">help?</span></h1>
+        <p class="lead">Questions, problems, or ideas? Check the quick answers below, ask in the Discord, or send us a message.</p>
+        <div class="help-options">
+          <a class="help-card" href="https://discord.gg/ultimawarriors" target="_blank" rel="noopener">
+            <span class="help-icon"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.32 4.37A19.8 19.8 0 0 0 15.4 2.85a.07.07 0 0 0-.08.04c-.21.38-.45.87-.61 1.25a18.3 18.3 0 0 0-5.49 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.06 19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13l.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01l.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.65-1.87.89a.08.08 0 0 0-.04.11c.36.7.77 1.36 1.23 1.99a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42Z"/></svg></span>
+            <strong>Ask in Discord</strong>
+            <span>Fastest way to get help. Ask in chat or message a moderator.</span>
+          </a>
+          <a class="help-card" href="#faq">
+            <span class="help-icon">❔</span>
+            <strong>Read the FAQ</strong>
+            <span>Answers to the questions we get asked the most.</span>
+          </a>
+          <a class="help-card" href="#contact">
+            <span class="help-icon">✉️</span>
+            <strong>Send a message</strong>
+            <span>Private questions, reports, or anything else. We'll reply by email.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (questions come from the FAQS list in script.js) -->
+    <section id="faq" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow">Quick answers</p>
+        <h2>Frequently asked questions</h2>
+        <div class="faq-list" id="faq-list"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT FORM (handled by Netlify Forms) -->
+    <section id="contact" class="section">
+      <div class="container contact-grid">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Send us a message</h2>
+          <p class="section-lead">
+            Fill out the form and it goes straight to the Ultima Warriors team. We usually reply within a
+            couple of days. For anything urgent in the server, message a moderator on Discord.
+          </p>
+          <p class="contact-email" id="contact-email" hidden>Prefer email? Write to <a id="contact-email-link" href="#"></a></p>
+        </div>
+
+        <form class="contact-form" id="contact-form" name="support" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="support">
+          <p class="hp-field" aria-hidden="true"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Your name</span>
+              <input type="text" name="name" required autocomplete="name" maxlength="100">
+            </label>
+            <label class="field">
+              <span>Email (so we can reply)</span>
+              <input type="email" name="email" required autocomplete="email" maxlength="200">
+            </label>
+          </div>
+          <div class="field-row">
+            <label class="field">
+              <span>What's it about?</span>
+              <select name="topic" required>
+                <option value="General question">General question</option>
+                <option value="Joining the community">Joining the community</option>
+                <option value="Report a member">Report a member</option>
+                <option value="Website problem">Website problem</option>
+                <option value="Streaming or partnership">Streaming or partnership</option>
+                <option value="Something else">Something else</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Discord username <em>(optional)</em></span>
+              <input type="text" name="discord" maxlength="100">
+            </label>
+          </div>
+          <label class="field">
+            <span>Message</span>
+            <textarea name="message" rows="6" required maxlength="5000"></textarea>
+          </label>
+          <button type="submit" class="btn btn-discord">Send message</button>
+          <p class="form-status" id="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Ultima Warriors · Made by gamers, for gamers. · <a href="index.html">Back to home</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

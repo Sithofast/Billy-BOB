@@ -26,6 +26,20 @@ It's a plain static site — just `index.html`, `styles.css`, and `script.js`. N
 - **Artwork**: the realistic space background, intro banner and mech images live in `assets/`.
   Replace a file there (same name) to swap the picture. See `assets/README.md`.
 
+## Support page (`support.html`)
+
+- **FAQ**: edit the `FAQS` list near the top of `script.js`.
+- **Public email (optional)**: put an address in `SUPPORT_EMAIL` in `script.js` to show it on the
+  page. Leave it empty to only use the contact form (keeps your inbox away from spam bots).
+- **Contact form**: handled by Netlify Forms, free on Netlify (100 messages a month on the free plan).
+  1. In Netlify, open your site → **Forms** → **Enable form detection**, then re-upload the site.
+     A form called **support** appears there.
+  2. To get each message by email: **Site configuration → Notifications → Emails and webhooks →
+     Form submission notifications → Add notification → Email notification**.
+  3. To automate later: add an **Outgoing webhook** in the same place to send messages to a
+     Discord channel, Zapier, or a helpdesk tool.
+  The form only sends on the live Netlify site; testing locally shows the "didn't send" message.
+
 ## Preview locally
 
 Open `index.html` in a browser, or run:

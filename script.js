@@ -59,6 +59,38 @@ const DISCORD_SERVER_ID = "969042661656915968";
 // Twitch channel shown in the "On the air" section (just the name after twitch.tv/).
 const TWITCH_CHANNEL = "Harebrn";
 
+// Support page: optional public email address. Leave as "" to only show the
+// contact form (keeps your inbox safe from spam bots).
+const SUPPORT_EMAIL = "";
+
+// Support page FAQ. Add, remove, or edit questions here.
+const FAQS = [
+  {
+    q: "How do I join Ultima Warriors?",
+    a: "Click any \"Join Discord\" button or go to discord.gg/ultimawarriors. Once you're in, say hello and check the rules channel.",
+  },
+  {
+    q: "Who is the community for?",
+    a: "We're built for older, grown-up gamers who want a laid-back, respectful place to play. If you're friendly and here to have fun, you'll fit right in.",
+  },
+  {
+    q: "Do I need to be good at games?",
+    a: "Not at all. Skill level doesn't matter here. Being a good teammate does.",
+  },
+  {
+    q: "How do I report a problem with another member?",
+    a: "Message a moderator in the Discord, or use the form below and choose \"Report a member\". Reports are kept private.",
+  },
+  {
+    q: "Can I suggest a game for game night?",
+    a: "Yes please! Drop your suggestion in the Discord and we'll add it to the rotation.",
+  },
+  {
+    q: "Something on the website isn't working.",
+    a: "Sorry about that! Use the form below and pick \"Website problem\". Tell us what device and browser you're using if you can.",
+  },
+];
+
 // Games the community plays.
 const GAMES = [
   "Eve Online",
@@ -74,6 +106,7 @@ const GAMES = [
 
 function renderCommunities() {
   const grid = document.getElementById("community-grid");
+  if (!grid) return;
   grid.innerHTML = "";
   for (const c of COMMUNITIES) {
     const live = Boolean(c.url);
@@ -115,6 +148,7 @@ function renderCommunities() {
 
 function renderGames() {
   const list = document.getElementById("game-list");
+  if (!list) return;
   list.innerHTML = "";
   for (const g of GAMES) {
     const li = document.createElement("li");
@@ -164,6 +198,10 @@ function hideMissingImages() {
 function setupIntro() {
   const intro = document.getElementById("intro");
   const root = document.documentElement;
+  if (!intro) {
+    root.classList.remove("show-intro");
+    return;
+  }
   if (!root.classList.contains("show-intro")) {
     intro.remove();
     return;
@@ -383,6 +421,7 @@ async function loadDiscordWidget() {
 }
 
 function startDiscordWidget() {
+  if (!document.getElementById("discord-widget")) return;
   loadDiscordWidget();
   if (DISCORD_SERVER_ID) setInterval(loadDiscordWidget, 60000); // refresh every minute
 }
@@ -547,7 +586,7 @@ async function checkTwitchLive() {
 }
 
 async function startTwitch() {
-  if (!TWITCH_CHANNEL) return;
+  if (!TWITCH_CHANNEL || !document.getElementById("stream")) return;
   document.querySelectorAll("[data-twitch-link]").forEach((a) => (a.href = `https://twitch.tv/${TWITCH_CHANNEL}`));
   setText("tw-name", TWITCH_CHANNEL);
   loadTwitchPlayer();
@@ -560,6 +599,60 @@ async function startTwitch() {
   setInterval(checkTwitchLive, 120000); // re-check every 2 minutes
 }
 
+// ---------- Support page: FAQ and contact form ----------
+function renderFaqs() {
+  const list = document.getElementById("faq-list");
+  if (!list) return;
+  for (const item of FAQS) {
+    const details = document.createElement("details");
+    details.className = "faq-item";
+    const summary = document.createElement("summary");
+    summary.textContent = item.q;
+    const answer = document.createElement("p");
+    answer.textContent = item.a;
+    details.append(summary, answer);
+    list.append(details);
+  }
+}
+
+// Messages are collected by Netlify Forms (see README). Netlify can email you
+// each one and pass them on to other tools later.
+function setupContactForm() {
+  const form = document.getElementById("contact-form");
+  if (!form) return;
+  if (SUPPORT_EMAIL) {
+    const link = document.getElementById("contact-email-link");
+    link.href = `mailto:${SUPPORT_EMAIL}`;
+    link.textContent = SUPPORT_EMAIL;
+    document.getElementById("contact-email").hidden = false;
+  }
+  const status = document.getElementById("form-status");
+  const button = form.querySelector('button[type="submit"]');
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    button.disabled = true;
+    status.className = "form-status";
+    status.textContent = "Sending…";
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(new FormData(form)).toString(),
+      });
+      if (!res.ok) throw new Error(`Form returned ${res.status}`);
+      form.reset();
+      status.classList.add("is-success");
+      status.textContent = "Thanks! Your message was sent. We'll get back to you soon.";
+    } catch (err) {
+      console.warn("Contact form failed:", err);
+      status.classList.add("is-error");
+      status.textContent = "Sorry, that didn't send. Please try again, or message a moderator on Discord.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCommunities();
 renderGames();
@@ -570,3 +663,5 @@ setupIntro();
 startStarfield();
 startDiscordWidget();
 startTwitch();
+renderFaqs();
+setupContactForm();
