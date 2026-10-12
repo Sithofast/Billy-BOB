@@ -39,7 +39,7 @@ const COMMUNITIES = [
     name: "Steam Group",
     icon: "🎮",
     description: "Find us on Steam and join group events.",
-    url: "",
+    url: "https://steamcommunity.com/groups/ultimawarriors",
     cta: "Join on Steam",
   },
   {
