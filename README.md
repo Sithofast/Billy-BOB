@@ -33,7 +33,9 @@ All of these are in `site/`:
   "Enable Server Widget" must be on in Discord).
 - **Change the story, rules, or text**: edit `index.html`.
 - **Change colors**: edit the variables at the top of `styles.css`.
-- **Intro banner**: first-time visitors see a full-screen "Ultima Warriors" intro. It only
+- **Intro banner**: first-time visitors see a full-screen "Ultima Warriors" intro, with clouds
+  drifting across the planet, a glowing atmosphere and the mech floating in front. After it closes
+  (and on every later visit) the mech beside the welcome text flies in from the right edge. It only
   shows once per browser. To see it again, add `?intro` to the end of the address
   (or click "Replay intro" in the footer). Its text is in the `intro` section of `index.html`.
 - **Artwork**: the realistic space background, intro banner and mech images live in

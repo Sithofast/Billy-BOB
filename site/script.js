@@ -300,6 +300,17 @@ function hideMissingImages() {
   });
 }
 
+// Hero mech flies in from the right edge (after the intro closes, if it's showing)
+function flyInMech(delay = 0) {
+  const mech = document.getElementById("hero-mech");
+  const root = document.documentElement;
+  if (!mech || !root.classList.contains("mech-waiting")) return;
+  setTimeout(() => {
+    root.classList.remove("mech-waiting");
+    mech.classList.add("flying");
+  }, delay);
+}
+
 function setupIntro() {
   const intro = document.getElementById("intro");
   const root = document.documentElement;
@@ -309,12 +320,14 @@ function setupIntro() {
   }
   if (!root.classList.contains("show-intro")) {
     intro.remove();
+    flyInMech(250);
     return;
   }
   const enter = intro.querySelector(".intro-enter");
   const close = () => {
     if (intro.classList.contains("closing")) return;
     intro.classList.add("closing");
+    flyInMech(450);
     try { localStorage.setItem("uw-intro-seen", "1"); } catch {}
     document.removeEventListener("keydown", onKey);
     setTimeout(() => {

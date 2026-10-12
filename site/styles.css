@@ -106,8 +106,31 @@ h3 { font-size: 1.2rem; }
 /* Hero */
 .hero { position: relative; overflow: hidden; padding: 60px 0 80px; }
 .hero-inner { position: relative; display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: center; }
+/* The mech flies in from the right edge when the page opens (or when the
+   intro closes), then keeps hovering */
+.hero-mech-wrap { position: relative; justify-self: center; width: 100%; max-width: 440px; }
+.mech-waiting .hero-mech-wrap { opacity: 0; }
+.hero-mech-wrap.flying { animation: mech-fly-in 1.9s cubic-bezier(.16, .84, .3, 1) both; }
+@keyframes mech-fly-in {
+  0% { opacity: 0; transform: translate(85vw, -22vh) rotate(-16deg) scale(.6); filter: blur(8px); }
+  12% { opacity: 1; }
+  65% { transform: translate(-4%, 3%) rotate(4deg) scale(1.03); filter: blur(0); }
+  82% { transform: translate(1.5%, -1%) rotate(-1.5deg) scale(1); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+.hero-mech-wrap::after { /* thruster trail streaking behind it during the flight */
+  content: ""; position: absolute; left: 55%; top: 46%; width: 120%; height: 10px; border-radius: 10px;
+  background: linear-gradient(90deg, rgba(160, 235, 255, .9), rgba(62, 224, 255, .4) 40%, transparent);
+  filter: blur(4px); opacity: 0; pointer-events: none; transform-origin: left center;
+}
+.hero-mech-wrap.flying::after { animation: mech-trail 1.9s ease-out both; }
+@keyframes mech-trail {
+  0% { opacity: .9; transform: rotate(-12deg) scaleX(1); }
+  55% { opacity: .6; transform: rotate(-4deg) scaleX(.6); }
+  100% { opacity: 0; transform: rotate(0) scaleX(0); }
+}
 .hero-mech {
-  width: 100%; height: auto; max-width: 440px; justify-self: center;
+  width: 100%; height: auto; max-width: 440px; display: block;
   filter: drop-shadow(0 0 40px rgba(62, 224, 255, .25)) drop-shadow(0 20px 30px rgba(0, 0, 0, .6));
   animation: hover 7s ease-in-out infinite;
 }
@@ -497,16 +520,46 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
   transition: opacity .7s ease, transform .7s ease;
 }
 .intro.closing { opacity: 0; transform: scale(1.06); pointer-events: none; }
-.intro-art { position: absolute; inset: 0; }
-.intro-art img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+.intro-art { position: absolute; inset: 0; overflow: hidden; }
+/* Covers the screen like a background image, keeping the artwork's shape (5504 × 3072) */
+.intro-scene {
+  position: absolute; left: 50%;
+  width: max(100vw, 179.17vh); aspect-ratio: 5504 / 3072;
+  top: calc((100vh - max(55.814vw, 100vh)) * 0.3);
+  transform: translateX(-50%);
   animation: intro-zoom 9s cubic-bezier(.2, .7, .2, 1) both;
 }
+.intro-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @keyframes intro-zoom {
-  from { opacity: 0; transform: scale(1.15); filter: brightness(.4); }
+  from { opacity: 0; transform: translateX(-50%) scale(1.15); filter: brightness(.4); }
   25% { opacity: 1; }
-  to { opacity: 1; transform: scale(1); filter: brightness(1); }
+  to { opacity: 1; transform: translateX(-50%) scale(1); filter: brightness(1); }
 }
+/* Drifting cloud bands and a breathing atmosphere glow on the planet */
+.intro-sky { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: screen; }
+.clouds-far { opacity: .32; animation: cloud-drift-far 240s linear infinite; }
+.clouds-near { opacity: .22; animation: cloud-drift-near 150s linear infinite; }
+@keyframes cloud-drift-far { to { transform: translateX(-1400px); } }
+@keyframes cloud-drift-near { to { transform: translateX(-2100px); } }
+.atmo-glow { opacity: .35; animation: atmo-pulse 6s ease-in-out infinite; }
+@keyframes atmo-pulse { 50% { opacity: .75; } }
+/* The mech floats in front, bobbing and tilting gently, thrusters flickering */
+.intro-mech {
+  /* where the mech sits in the original artwork (percent of the frame) */
+  position: absolute; left: 27.907%; top: 3.906%; width: 52.616%; height: auto;
+  animation: mech-float 7s ease-in-out infinite, thruster-flicker 1.6s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes mech-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(-.6%, -2.2%) rotate(-1.2deg); }
+  65% { transform: translate(.5%, -1%) rotate(.8deg); }
+}
+@keyframes thruster-flicker {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 rgba(150, 220, 255, 0)); }
+  50% { filter: brightness(1.07) drop-shadow(0 0 18px rgba(150, 220, 255, .35)); }
+}
+
 .intro-content {
   position: relative; width: 100%; max-width: 900px;
 }
@@ -556,12 +609,12 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
 @media (max-width: 820px) {
   .hero { padding: 40px 0 70px; }
   .hero-inner { grid-template-columns: 1fr; }
-  .hero-mech { order: -1; }
+  .hero-mech-wrap { order: -1; }
   .two-col, .live-grid, .stream-grid, .contact-grid, .field-row { grid-template-columns: 1fr; gap: 2rem; }
   .field-row { gap: 1rem; }
   .section { padding: 64px 0; }
   .container { padding: 0 16px; }
-  .hero-mech { max-width: 260px; }
+  .hero-mech-wrap, .hero-mech { max-width: 260px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

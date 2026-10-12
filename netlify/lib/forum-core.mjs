@@ -19,8 +19,13 @@ export class ForumError extends Error {
   }
 }
 
+// Ids always increase, even for posts made in the same millisecond, so
+// sorting ids keeps posts in the order they were made
+let lastIdTime = 0;
 export function newId(now = Date.now()) {
-  return now.toString(36).padStart(9, "0") + randomBytes(4).toString("hex");
+  const time = Math.max(now, lastIdTime + 1);
+  lastIdTime = time;
+  return time.toString(36).padStart(9, "0") + randomBytes(4).toString("hex");
 }
 
 function idTime(id) {
@@ -84,7 +89,8 @@ export async function listThreads(store, cat) {
   checkCategory(cat);
   const ids = (await keys(store, `thread/${cat}/`)).sort().reverse().slice(0, LIMITS.threadsPerCategory);
   const threads = (await Promise.all(ids.map((k) => store.get(k, { type: "json" })))).filter(Boolean);
-  threads.sort((a, b) => b.lastActivity - a.lastActivity);
+  // Most recently active first; ties go to the newer topic
+  threads.sort((a, b) => b.lastActivity - a.lastActivity || (a.id < b.id ? 1 : -1));
   return { threads: threads.map(({ body, ...summary }) => summary) };
 }
 
@@ -104,9 +110,11 @@ export async function createThread(store, user, input, now = Date.now()) {
   const title = cleanText(input?.title, LIMITS.title, "title", 3);
   const body = cleanText(input?.body, LIMITS.body, "message");
   await enforceCooldown(store, user, now);
+  const id = newId(now);
+  const at = idTime(id); // same as now, nudged forward if two posts share a millisecond
   const thread = {
-    id: newId(now), category: cat, title, body, author: author(user),
-    createdAt: now, lastActivity: now, replyCount: 0,
+    id, category: cat, title, body, author: author(user),
+    createdAt: at, lastActivity: at, replyCount: 0,
   };
   await store.setJSON(`thread/${cat}/${thread.id}`, thread);
   return { thread };
@@ -121,9 +129,11 @@ export async function createReply(store, user, input, now = Date.now()) {
   const thread = await store.get(key, { type: "json" });
   if (!thread) throw new ForumError(404, "That topic doesn't exist (it may have been deleted).");
   await enforceCooldown(store, user, now);
-  const reply = { id: newId(now), threadId, body, author: author(user), createdAt: now };
+  const id = newId(now);
+  const at = idTime(id);
+  const reply = { id, threadId, body, author: author(user), createdAt: at };
   await store.setJSON(`reply/${threadId}/${reply.id}`, reply);
-  await store.setJSON(key, { ...thread, lastActivity: now, replyCount: (thread.replyCount || 0) + 1 });
+  await store.setJSON(key, { ...thread, lastActivity: at, replyCount: (thread.replyCount || 0) + 1 });
   return { reply };
 }
 
