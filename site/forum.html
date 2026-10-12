@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forum · Ultima Warriors</title>
+  <meta name="description" content="The Ultima Warriors forum: general chat and boards for every game we play.">
+  <meta name="theme-color" content="#05060f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="space-bg" aria-hidden="true"></div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="brand">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <polygon points="19,14 5,2 11,14" fill="#40539a"/>
+          <polygon points="21,14 35,2 29,14" fill="#40539a"/>
+          <polygon points="11,13 29,13 32,22 29,35 11,35 8,22" fill="#1c2550" stroke="#7a95ff" stroke-width="1.2"/>
+          <polygon points="13,20 27,20 25,25 15,25" fill="#3ee0ff"/>
+        </svg>
+        <span>Ultima Warriors</span>
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html#live">Live</a></li>
+        <li><a href="index.html#stream" class="nav-stream">Stream</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#communities">Communities</a></li>
+        <li><a href="index.html#games">Games</a></li>
+        <li><a href="index.html#rules">House Rules</a></li>
+        <li><a href="forum.html" aria-current="page">Forum</a></li>
+        <li><a href="support.html">Support</a></li>
+        <li><a href="https://discord.gg/ultimawarriors" class="btn btn-small" target="_blank" rel="noopener">Join Discord</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="section forum">
+      <div class="container">
+        <div class="forum-top">
+          <div>
+            <p class="eyebrow">Community forum</p>
+            <h1>The <span class="accent">war room</span></h1>
+            <nav class="forum-crumbs" id="forum-crumbs" aria-label="Forum location"></nav>
+          </div>
+          <div class="forum-auth" id="forum-auth" aria-live="polite"></div>
+        </div>
+        <div id="forum-view" aria-live="polite">
+          <p class="forum-muted">Loading the forum…</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Ultima Warriors · Made by gamers, for gamers. · <a href="index.html">Back to home</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="forum.js"></script>
+</body>
+</html>
