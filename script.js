@@ -501,6 +501,7 @@ function renderReplays() {
     const title = document.createElement("span");
     title.className = "tw-replay-title";
     title.textContent = item.title;
+    a.title = item.title;
     a.append(icon, title);
     a.addEventListener("click", (e) => {
       if (!twitch.player) return; // no embedded player: open on Twitch instead
