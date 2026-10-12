@@ -534,10 +534,7 @@ a.card-featured:hover { border-color: var(--cyan); box-shadow: 0 0 40px rgba(62,
 .game-site-banner a { font-weight: 700; }
 
 /* Rules */
-.rules { max-width: 760px; padding-left: 1.3em; margin: 0; }
-.rules li { margin-bottom: .8rem; color: var(--muted); }
-.rules li::marker { color: var(--cyan); font-family: var(--font-display); font-weight: 700; }
-.rules strong { color: var(--text); }
+.values-pitch { max-width: 760px; margin: 0; font-size: 1.25rem; line-height: 1.7; color: var(--text); }
 
 /* CTA */
 .cta { text-align: center; }
