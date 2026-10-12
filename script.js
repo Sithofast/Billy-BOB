@@ -306,6 +306,10 @@ function renderDiscordWidget(data) {
     .sort((a, b) => a.position - b.position)
     .map((ch) => ({ ...ch, people: inVoice.filter((m) => m.channel_id === ch.id) }))
     .filter((ch) => ch.people.length);
+  // People in voice channels Discord doesn't name (private channels) go in one group
+  const known = new Set(channels.map((ch) => ch.id));
+  const unnamed = inVoice.filter((m) => !known.has(m.channel_id));
+  if (unnamed.length) channels.push({ name: "Voice chat", people: unnamed });
   if (channels.length) {
     const heading = document.createElement("h3");
     heading.className = "dw-heading";
