@@ -91,13 +91,37 @@ const FAQS = [
   },
 ];
 
-// Games the community plays.
+// Games the community plays. Each one gets a forum board, and on the home page
+// hovering (or tapping) a game shows its overview and a link to its website.
+//   name:  the game's name (also used for its forum board)
+//   url:   the game's official website ("" hides the website button)
+//   about: one or two sentences for people who don't own it yet
 const GAMES = [
-  "Eve Online",
-  "World of Warcraft: Forever",
-  "Farming Simulator",
-  "Conan Exiles",
-  "Star Wars Galaxies",
+  {
+    name: "Eve Online",
+    url: "https://www.eveonline.com/",
+    about: "A huge sci-fi sandbox MMO where thousands of players mine, trade, explore and fight together in one shared universe of star systems.",
+  },
+  {
+    name: "World of Warcraft: Forever",
+    url: "https://worldofwarcraft.blizzard.com/en-us/forever",
+    about: "Blizzard's new, permanent take on the original World of Warcraft: classic-style adventuring to level 60 with new zones, dungeons and raids. Included with a WoW subscription.",
+  },
+  {
+    name: "Farming Simulator",
+    url: "https://www.farming-simulator.com/",
+    about: "Run your own farm: grow crops, raise animals and drive hundreds of real-brand tractors and machines, on your own or with friends in co-op.",
+  },
+  {
+    name: "Conan Exiles",
+    url: "https://www.conanexiles.com/",
+    about: "Open-world survival in the savage lands of Conan the Barbarian: gather, craft, build a stronghold and fight to survive, solo or with friends.",
+  },
+  {
+    name: "Star Wars Galaxies",
+    url: "https://swguprising.com/",
+    about: "The classic Star Wars MMO, kept alive by fan-run community servers. We play on SWG Uprising.",
+  },
 ];
 
 // ============================================================
@@ -151,19 +175,91 @@ function slugify(name) {
   return String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50);
 }
 
+// Opens the card to the left if it would run off the right edge of the screen
+function placeGameCard(li) {
+  const card = li.querySelector(".game-card");
+  li.classList.remove("align-right");
+  const right = li.getBoundingClientRect().left + card.offsetWidth;
+  if (right > document.documentElement.clientWidth - 12) li.classList.add("align-right");
+}
+
+// Accepts either a plain name ("Eve Online") or a full game entry
+function gameInfo(game) {
+  return typeof game === "string" ? { name: game, url: "", about: "" } : { url: "", about: "", ...game };
+}
+
 function renderGames() {
   const list = document.getElementById("game-list");
   if (!list) return;
   list.innerHTML = "";
-  for (const g of GAMES) {
+  GAMES.map(gameInfo).forEach((game, i) => {
     const li = document.createElement("li");
-    const link = document.createElement("a");
-    link.href = `forum.html#/c/${slugify(g)}`;
-    link.textContent = g;
-    link.title = `${g} forum board`;
-    li.append(link);
+    li.className = "game-chip";
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "game-chip-btn";
+    toggle.textContent = game.name;
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-controls", `game-card-${i}`);
+
+    const card = document.createElement("div");
+    card.className = "game-card";
+    card.id = `game-card-${i}`;
+    const title = document.createElement("strong");
+    title.textContent = game.name;
+    card.append(title);
+    if (game.about) {
+      const about = document.createElement("p");
+      about.textContent = game.about;
+      card.append(about);
+    }
+    const actions = document.createElement("div");
+    actions.className = "game-card-actions";
+    if (game.url) {
+      const site = document.createElement("a");
+      site.className = "btn btn-small game-site";
+      site.href = game.url;
+      site.target = "_blank";
+      site.rel = "noopener";
+      site.textContent = "Official website ↗";
+      actions.append(site);
+    }
+    const forum = document.createElement("a");
+    forum.href = `forum.html#/c/${slugify(game.name)}`;
+    forum.textContent = "Forum board →";
+    actions.append(forum);
+    card.append(actions);
+
+    // Hover shows the card on computers; tapping/clicking toggles it (phones, keyboards)
+    toggle.addEventListener("click", () => {
+      placeGameCard(li);
+      const open = !li.classList.contains("open");
+      list.querySelectorAll(".game-chip.open").forEach((other) => {
+        other.classList.remove("open");
+        other.querySelector(".game-chip-btn").setAttribute("aria-expanded", "false");
+      });
+      li.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    li.addEventListener("mouseenter", () => placeGameCard(li));
+    toggle.addEventListener("focus", () => placeGameCard(li));
+    li.append(toggle, card);
     list.append(li);
-  }
+  });
+  // Close an open card when clicking elsewhere or pressing Escape
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".game-chip")) list.querySelectorAll(".game-chip.open").forEach((li) => {
+      li.classList.remove("open");
+      li.querySelector(".game-chip-btn").setAttribute("aria-expanded", "false");
+    });
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") list.querySelectorAll(".game-chip.open").forEach((li) => {
+      li.classList.remove("open");
+      li.querySelector(".game-chip-btn").setAttribute("aria-expanded", "false");
+    });
+  });
 }
 
 function setupNav() {

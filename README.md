@@ -20,8 +20,11 @@ All of these are in `site/`:
 - **Add or update a community** (YouTube, Twitch, Facebook, etc.): open `script.js` and edit
   the `COMMUNITIES` list at the top. Put the link in `url`. Entries with an empty `url`
   show as "Coming soon".
-- **Change the games list**: edit `GAMES` in `script.js`. Each game also gets its own forum board
-  automatically (see below).
+- **Change the games list**: edit `GAMES` in `script.js`. Each game has a `name`, its official
+  website `url`, and a short `about` overview. On the home page, hovering over (or tapping) a game
+  shows the overview with buttons to the official website and its forum board. Each game also
+  gets its own forum board automatically, with a "New to this game? Visit the official website"
+  link (see below).
 - **Twitch**: the "On the air" section and the Twitch card follow `TWITCH_CHANNEL` in
   `script.js`. When the channel is live it shows the stream with LIVE badges; when offline it
   plays the latest past broadcast and lists recent ones. Twitch only keeps past broadcasts if
