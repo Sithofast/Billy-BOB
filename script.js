@@ -53,7 +53,7 @@ const COMMUNITIES = [
 // Discord live widget.
 // 1. In Discord: Server Settings → Widget → turn on "Enable Server Widget".
 // 2. Copy the "Server ID" shown on that page and paste it between the quotes.
-const DISCORD_SERVER_ID = "";
+const DISCORD_SERVER_ID = "969042661656915968";
 
 // Games the community plays.
 const GAMES = [
