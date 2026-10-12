@@ -22,94 +22,12 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Shared artwork: the Ultima Warriors mech, reused in the intro and hero. -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="mech-armor" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#2c3970"/>
-        <stop offset=".55" stop-color="#141a3a"/>
-        <stop offset="1" stop-color="#090c1d"/>
-      </linearGradient>
-      <linearGradient id="mech-armor-light" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#40539a"/>
-        <stop offset="1" stop-color="#19214c"/>
-      </linearGradient>
-      <radialGradient id="mech-glow-cyan">
-        <stop offset="0" stop-color="#e9fcff"/>
-        <stop offset=".35" stop-color="#3ee0ff"/>
-        <stop offset="1" stop-color="#3ee0ff" stop-opacity="0"/>
-      </radialGradient>
-      <linearGradient id="mech-thrust" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#fff3dc"/>
-        <stop offset=".3" stop-color="#ff8a3d"/>
-        <stop offset="1" stop-color="#ff3d6e" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <symbol id="mech" viewBox="0 0 400 560">
-      <!-- boot thrusters -->
-      <g fill="url(#mech-thrust)">
-        <polygon points="118,494 198,494 172,558 144,558"/>
-        <polygon points="202,494 282,494 256,558 228,558"/>
-        <animate attributeName="opacity" values=".65;1;.8;1;.65" dur=".5s" repeatCount="indefinite"/>
-      </g>
-      <g stroke="#7a95ff" stroke-opacity=".45" stroke-width="1.5" stroke-linejoin="round">
-        <!-- legs -->
-        <polygon points="144,288 182,288 180,352 146,352" fill="url(#mech-armor)"/>
-        <polygon points="138,348 184,348 180,378 142,378" fill="url(#mech-armor-light)"/>
-        <polygon points="142,376 180,376 190,470 132,470" fill="url(#mech-armor)"/>
-        <polygon points="120,468 196,468 204,494 112,494" fill="url(#mech-armor-light)"/>
-        <polygon points="256,288 218,288 220,352 254,352" fill="url(#mech-armor)"/>
-        <polygon points="262,348 216,348 220,378 258,378" fill="url(#mech-armor-light)"/>
-        <polygon points="258,376 220,376 210,470 268,470" fill="url(#mech-armor)"/>
-        <polygon points="280,468 204,468 196,494 288,494" fill="url(#mech-armor-light)"/>
-        <!-- hips and waist -->
-        <polygon points="146,246 192,246 188,298 150,290" fill="url(#mech-armor-light)"/>
-        <polygon points="254,246 208,246 212,298 250,290" fill="url(#mech-armor-light)"/>
-        <polygon points="160,222 240,222 234,252 166,252" fill="url(#mech-armor)"/>
-        <!-- torso -->
-        <polygon points="148,104 252,104 270,152 254,224 146,224 130,152" fill="url(#mech-armor)"/>
-        <polygon points="160,114 196,114 196,160 150,152" fill="url(#mech-armor-light)"/>
-        <polygon points="240,114 204,114 204,160 250,152" fill="url(#mech-armor-light)"/>
-        <!-- left arm -->
-        <polygon points="86,160 122,160 118,222 90,222" fill="url(#mech-armor)"/>
-        <polygon points="78,220 126,220 130,292 74,292" fill="url(#mech-armor-light)"/>
-        <polygon points="84,292 120,292 116,318 88,318" fill="url(#mech-armor)"/>
-        <!-- right arm with cannon -->
-        <polygon points="278,160 314,160 310,222 282,222" fill="url(#mech-armor)"/>
-        <polygon points="272,220 328,220 334,286 266,286" fill="url(#mech-armor-light)"/>
-        <polygon points="284,286 316,286 312,370 288,370" fill="url(#mech-armor)"/>
-        <!-- shoulders -->
-        <polygon points="150,98 98,92 70,122 80,164 132,154" fill="url(#mech-armor-light)"/>
-        <polygon points="250,98 302,92 330,122 320,164 268,154" fill="url(#mech-armor-light)"/>
-        <!-- neck and head -->
-        <rect x="186" y="88" width="28" height="18" fill="#10152e"/>
-        <polygon points="196,54 158,12 176,52" fill="url(#mech-armor-light)"/>
-        <polygon points="204,54 242,12 224,52" fill="url(#mech-armor-light)"/>
-        <polygon points="176,50 224,50 232,70 224,94 176,94 168,70" fill="url(#mech-armor)"/>
-      </g>
-      <!-- shoulder stripes -->
-      <path d="M86 130 L130 122 M314 130 L270 122" stroke="#ff8a3d" stroke-width="4" stroke-linecap="round"/>
-      <!-- panel lines -->
-      <path d="M170 196 H230 M174 210 H226" stroke="#3ee0ff" stroke-opacity=".35" stroke-width="2"/>
-      <!-- glowing parts -->
-      <g>
-        <ellipse cx="200" cy="72" rx="34" ry="14" fill="url(#mech-glow-cyan)" opacity=".7"/>
-        <polygon points="180,66 220,66 213,78 187,78" fill="#3ee0ff"/>
-        <circle cx="200" cy="178" r="20" fill="url(#mech-glow-cyan)"/>
-        <circle cx="200" cy="178" r="6" fill="#e9fcff"/>
-        <circle cx="300" cy="374" r="16" fill="url(#mech-glow-cyan)"/>
-        <circle cx="161" cy="363" r="3" fill="#3ee0ff"/>
-        <circle cx="239" cy="363" r="3" fill="#3ee0ff"/>
-        <animate attributeName="opacity" values=".75;1;.75" dur="2.6s" repeatCount="indefinite"/>
-      </g>
-    </symbol>
-  </svg>
-
   <!-- First-visit intro banner -->
   <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title">
-    <div class="intro-stars" aria-hidden="true"></div>
-    <div class="intro-glow" aria-hidden="true"></div>
-    <svg class="intro-mech" viewBox="0 0 400 560" aria-hidden="true"><use href="#mech"/></svg>
+    <picture class="intro-art" aria-hidden="true">
+      <source media="(max-width: 820px)" srcset="assets/intro-1920.webp">
+      <img src="assets/intro.webp" alt="" fetchpriority="high">
+    </picture>
     <div class="intro-content">
       <p class="intro-hud">// Systems online · Pilots wanted</p>
       <h2 class="intro-title" id="intro-title"><span>Ultima</span> <span>Warriors</span></h2>
@@ -118,6 +36,7 @@
     </div>
   </div>
 
+  <div class="space-bg" aria-hidden="true"></div>
   <canvas id="stars" aria-hidden="true"></canvas>
 
   <header class="site-header">
@@ -145,7 +64,6 @@
   <main id="top">
     <!-- HERO -->
     <section class="hero">
-      <div class="planet" aria-hidden="true"></div>
       <div class="container hero-inner">
         <div class="hero-text">
           <p class="eyebrow">Grown-up gamers · Good company · No drama</p>
@@ -166,7 +84,7 @@
             <button class="copy-btn" data-copy="https://discord.gg/ultimawarriors">Copy link</button>
           </p>
         </div>
-        <svg class="hero-mech" viewBox="0 0 400 560" aria-hidden="true"><use href="#mech"/></svg>
+        <img class="hero-mech" src="assets/mech.webp" alt="A giant Ultima Warriors battle mech" width="900" height="1200">
       </div>
     </section>
 

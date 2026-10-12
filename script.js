@@ -138,6 +138,15 @@ function setupCopy() {
   });
 }
 
+// Hide any artwork image that fails to load instead of showing a broken icon.
+function hideMissingImages() {
+  document.querySelectorAll("img").forEach((img) => {
+    const hide = () => (img.style.visibility = "hidden");
+    if (img.complete && img.naturalWidth === 0) hide();
+    else img.addEventListener("error", hide);
+  });
+}
+
 function setupIntro() {
   const intro = document.getElementById("intro");
   const root = document.documentElement;
@@ -169,6 +178,7 @@ function setupIntro() {
 
 function startStarfield() {
   const canvas = document.getElementById("stars");
+  const backdrop = document.querySelector(".space-bg");
   const ctx = canvas.getContext("2d");
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let stars = [];
@@ -182,7 +192,7 @@ function startStarfield() {
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = Math.round((width * height) / 2600);
+    const count = Math.round((width * height) / 5000);
     stars = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -191,30 +201,45 @@ function startStarfield() {
     }));
   }
 
+  // Scrolling moves near stars faster than far ones, and nudges the space
+  // photo a little, so the background feels deep and continuous.
+  function parallax() {
+    if (reduceMotion) return;
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+    const range = window.innerHeight * 0.08;
+    backdrop.style.transform = `translateY(${range - 2 * range * progress}px)`;
+  }
+
   function draw(time) {
     ctx.clearRect(0, 0, width, height);
+    const scroll = reduceMotion ? 0 : window.scrollY;
     for (const s of stars) {
       if (!reduceMotion) {
-        s.y += s.depth * 0.18;
+        s.y += s.depth * 0.08;
         if (s.y > height) {
           s.y = 0;
           s.x = Math.random() * width;
         }
       }
+      const y = (((s.y - scroll * s.depth * 0.35) % height) + height) % height;
       const twinkle = 0.5 + 0.5 * Math.sin(s.phase + time * 0.002 * s.depth);
-      ctx.globalAlpha = 0.25 + 0.75 * twinkle * s.depth;
+      ctx.globalAlpha = 0.2 + 0.7 * twinkle * s.depth;
       ctx.fillStyle = s.depth > 0.85 ? "#bfe9ff" : "#ffffff";
-      const size = s.depth * 1.8;
-      ctx.fillRect(s.x, s.y, size, size);
+      const size = s.depth * 1.6;
+      ctx.fillRect(s.x, y, size, size);
     }
     if (!reduceMotion) requestAnimationFrame(draw);
   }
 
   window.addEventListener("resize", () => {
     resize();
+    parallax();
     if (reduceMotion) draw(0);
   });
+  window.addEventListener("scroll", parallax, { passive: true });
   resize();
+  parallax();
   if (reduceMotion) draw(0);
   else requestAnimationFrame(draw);
 }
@@ -224,5 +249,6 @@ renderCommunities();
 renderGames();
 setupNav();
 setupCopy();
+hideMissingImages();
 setupIntro();
 startStarfield();
