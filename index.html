@@ -52,6 +52,7 @@
       </a>
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav-links">
+        <li><a href="#live">Live</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#communities">Communities</a></li>
         <li><a href="#games">Games</a></li>
@@ -85,6 +86,35 @@
           </p>
         </div>
         <img class="hero-mech" src="assets/mech.webp" alt="A giant Ultima Warriors battle mech" width="805" height="1239">
+      </div>
+    </section>
+
+    <!-- LIVE DISCORD WIDGET (filled in by script.js) -->
+    <section id="live" class="section">
+      <div class="container live-grid">
+        <div class="live-intro">
+          <p class="eyebrow">Live from the hangar</p>
+          <h2>Who's online right now</h2>
+          <p class="section-lead">
+            See who's hanging out in the Discord and which voice channels are busy.
+            Jump in and say hello.
+          </p>
+          <div class="live-stats">
+            <div class="stat"><span class="stat-num" id="dw-online">–</span><span class="stat-label">Online now</span></div>
+            <div class="stat"><span class="stat-num" id="dw-voice">–</span><span class="stat-label">In voice</span></div>
+          </div>
+          <a href="https://discord.gg/ultimawarriors" class="btn btn-discord" id="dw-join" target="_blank" rel="noopener">Join the server</a>
+        </div>
+        <div class="dw-panel" id="discord-widget" aria-live="polite">
+          <div class="dw-header">
+            <span class="dw-dot" aria-hidden="true"></span>
+            <strong id="dw-name">Ultima Warriors</strong>
+            <span class="dw-count" id="dw-count"></span>
+          </div>
+          <div class="dw-body" id="dw-body">
+            <p class="dw-message">Connecting to Discord…</p>
+          </div>
+        </div>
       </div>
     </section>
 

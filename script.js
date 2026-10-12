@@ -50,6 +50,11 @@ const COMMUNITIES = [
   },
 ];
 
+// Discord live widget.
+// 1. In Discord: Server Settings → Widget → turn on "Enable Server Widget".
+// 2. Copy the "Server ID" shown on that page and paste it between the quotes.
+const DISCORD_SERVER_ID = "";
+
 // Games the community plays.
 const GAMES = [
   "Eve Online",
@@ -241,6 +246,131 @@ function startStarfield() {
   else requestAnimationFrame(draw);
 }
 
+// ---------- Discord live widget ----------
+const STATUS_LABELS = { online: "Online", idle: "Away", dnd: "Do not disturb" };
+
+function memberRow(member) {
+  const li = document.createElement("li");
+  li.className = "dw-member";
+  const avatar = document.createElement("span");
+  avatar.className = "dw-avatar";
+  avatar.textContent = (member.username || "?").charAt(0).toUpperCase();
+  if (member.avatar_url) {
+    const img = document.createElement("img");
+    img.src = member.avatar_url;
+    img.alt = "";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.addEventListener("error", () => img.remove());
+    avatar.append(img);
+  }
+  const status = document.createElement("span");
+  status.className = `dw-status dw-status-${member.status || "online"}`;
+  status.title = STATUS_LABELS[member.status] || "Online";
+  avatar.append(status);
+
+  const text = document.createElement("span");
+  text.className = "dw-member-text";
+  const name = document.createElement("span");
+  name.className = "dw-member-name";
+  name.textContent = member.username || "Member";
+  text.append(name);
+  if (member.game && member.game.name) {
+    const game = document.createElement("span");
+    game.className = "dw-member-game";
+    game.textContent = `Playing ${member.game.name}`;
+    text.append(game);
+  }
+  li.append(avatar, text);
+  return li;
+}
+
+function renderDiscordWidget(data) {
+  const body = document.getElementById("dw-body");
+  const members = data.members || [];
+  const online = data.presence_count ?? members.length;
+  const inVoice = members.filter((m) => m.channel_id);
+  document.getElementById("discord-widget").classList.add("is-live");
+
+  document.getElementById("dw-name").textContent = data.name || "Ultima Warriors";
+  document.getElementById("dw-count").textContent = `${online} online`;
+  document.getElementById("dw-online").textContent = online;
+  document.getElementById("dw-voice").textContent = inVoice.length;
+  if (data.instant_invite) document.getElementById("dw-join").href = data.instant_invite;
+
+  body.innerHTML = "";
+
+  // Voice channels that have people in them
+  const channels = (data.channels || [])
+    .slice()
+    .sort((a, b) => a.position - b.position)
+    .map((ch) => ({ ...ch, people: inVoice.filter((m) => m.channel_id === ch.id) }))
+    .filter((ch) => ch.people.length);
+  if (channels.length) {
+    const heading = document.createElement("h3");
+    heading.className = "dw-heading";
+    heading.textContent = "In voice";
+    body.append(heading);
+    for (const ch of channels) {
+      const group = document.createElement("div");
+      group.className = "dw-channel";
+      const title = document.createElement("div");
+      title.className = "dw-channel-name";
+      title.textContent = `🔊 ${ch.name}`;
+      const list = document.createElement("ul");
+      list.className = "dw-list";
+      ch.people.forEach((m) => list.append(memberRow(m)));
+      group.append(title, list);
+      body.append(group);
+    }
+  }
+
+  const heading = document.createElement("h3");
+  heading.className = "dw-heading";
+  heading.textContent = `Online — ${online}`;
+  body.append(heading);
+  if (members.length) {
+    const list = document.createElement("ul");
+    list.className = "dw-list";
+    members.forEach((m) => list.append(memberRow(m)));
+    body.append(list);
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "dw-message";
+    empty.textContent = "It's quiet right now — be the first to log on!";
+    body.append(empty);
+  }
+}
+
+function showWidgetMessage(text) {
+  document.getElementById("discord-widget").classList.remove("is-live");
+  document.getElementById("dw-body").innerHTML = "";
+  const p = document.createElement("p");
+  p.className = "dw-message";
+  p.textContent = text;
+  document.getElementById("dw-body").append(p);
+}
+
+async function loadDiscordWidget() {
+  if (!DISCORD_SERVER_ID) {
+    showWidgetMessage("Live member list coming soon. Hop into the Discord to see who's around!");
+    return;
+  }
+  try {
+    const res = await fetch(`https://discord.com/api/guilds/${encodeURIComponent(DISCORD_SERVER_ID)}/widget.json`);
+    if (!res.ok) throw new Error(`Discord returned ${res.status}`);
+    renderDiscordWidget(await res.json());
+  } catch (err) {
+    console.warn("Discord widget unavailable:", err);
+    showWidgetMessage("Couldn't reach Discord right now. Hop into the server to see who's around!");
+  }
+}
+
+function startDiscordWidget() {
+  loadDiscordWidget();
+  if (DISCORD_SERVER_ID) setInterval(loadDiscordWidget, 60000); // refresh every minute
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCommunities();
 renderGames();
@@ -249,3 +379,4 @@ setupCopy();
 hideMissingImages();
 setupIntro();
 startStarfield();
+startDiscordWidget();
