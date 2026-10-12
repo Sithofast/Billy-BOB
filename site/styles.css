@@ -80,6 +80,35 @@ h3 { font-size: 1.2rem; }
 .btn-ghost { background: rgba(62, 224, 255, .1); color: var(--cyan); }
 .btn-ghost:hover { background: rgba(62, 224, 255, .2); }
 .btn-small { --cut: 8px; padding: .5em 1.1em; background: var(--discord); color: #fff !important; }
+/* Holographic style for every "Join Discord" link: the site's cyan/violet heading
+   colours shifting across the button with a light sheen sweeping over it */
+.btn-holo {
+  position: relative; overflow: hidden; isolation: isolate;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.02rem; letter-spacing: .07em; text-transform: uppercase;
+  color: #050818 !important; text-shadow: 0 1px 0 rgba(255, 255, 255, .35);
+  background: linear-gradient(115deg, #3ee0ff 0%, #8fb2ff 22%, #b38bff 45%, #ff9ee8 55%, #9b6bff 70%, #3ee0ff 100%);
+  background-size: 300% 100%;
+  animation: holo-shift 7s linear infinite;
+}
+.btn-holo::after { /* light sheen sweeping across */
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, .65) 48%, rgba(255, 255, 255, .15) 55%, transparent 70%);
+  transform: translateX(-120%); animation: holo-sheen 3.6s ease-in-out infinite;
+}
+.btn-holo:hover { filter: brightness(1.08) saturate(1.15); }
+.btn-holo svg { filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .35)); }
+.btn-small.btn-holo { font-size: .82rem; padding: .55em 1.15em; }
+@media (max-width: 600px) {
+  .btn-holo:not(.btn-small) { font-size: .88rem; letter-spacing: .04em; white-space: normal; text-align: center; justify-content: center; }
+}
+@keyframes holo-shift { to { background-position: 300% 0; } }
+@keyframes holo-sheen { 0%, 35% { transform: translateX(-120%); } 75%, 100% { transform: translateX(120%); } }
+/* Same shimmering colours as text (featured Discord card's "Join the server") */
+.holo-text {
+  background: linear-gradient(115deg, #3ee0ff, #8fb2ff 25%, #c9a3ff 45%, #ff9ee8 55%, #9b6bff 75%, #3ee0ff);
+  background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important;
+  animation: holo-shift 7s linear infinite;
+}
 
 /* Header */
 .site-header {
@@ -182,13 +211,16 @@ a.card:hover { transform: translateY(-4px); border-color: var(--cyan); box-shado
 .card-soon .card-cta { color: var(--muted); }
 .card-featured {
   grid-column: 1 / -1;
-  background: linear-gradient(120deg, rgba(88, 101, 242, .9), rgba(123, 92, 255, .85) 60%, rgba(62, 224, 255, .55));
-  border-color: transparent;
+  background:
+    linear-gradient(120deg, rgba(62, 224, 255, .16), rgba(155, 107, 255, .2) 50%, rgba(62, 224, 255, .1)),
+    var(--surface);
+  border-color: rgba(62, 224, 255, .5);
 }
-.card-featured::before, .card-featured::after { border-color: #fff; }
-.card-featured p { color: #e9ebff; }
-.card-featured .card-cta { color: #fff; }
-a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 255, .45); }
+.card-featured h3 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: .06em; text-transform: uppercase; }
+.card-featured .card-cta { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase; }
+.card-featured::before, .card-featured::after { border-color: var(--cyan); }
+.card-featured p { color: var(--text); }
+a.card-featured:hover { border-color: var(--cyan); box-shadow: 0 0 40px rgba(62, 224, 255, .25), 0 0 60px rgba(155, 107, 255, .2); }
 .badge {
   align-self: flex-start; background: var(--orange); color: #1d0c00;
   font-family: var(--font-display); font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
@@ -450,6 +482,8 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
 }
 
 /* Games */
+/* closed (invisible) cards must never make the page scroll sideways */
+#games { overflow-x: clip; }
 .game-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .55rem; }
 .game-chip { position: relative; }
 .game-chip:hover, .game-chip.open, .game-chip:focus-within { z-index: 30; }
@@ -482,6 +516,8 @@ a.card-featured:hover { border-color: #fff; box-shadow: 0 0 40px rgba(123, 92, 2
 .game-chip.open .game-card { opacity: 1; visibility: visible; transform: none; }
 @media (hover: hover) {
   .game-chip:hover .game-card { opacity: 1; visibility: visible; transform: none; }
+  /* leave room for the card so it never covers the House Rules section */
+  #games { padding-bottom: 210px; }
 }
 /* Touch screens: the card opens in place below the game and pushes the others
    down, instead of floating over them */

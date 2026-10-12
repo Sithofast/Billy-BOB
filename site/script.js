@@ -149,7 +149,7 @@ function renderCommunities() {
     const desc = document.createElement("p");
     desc.textContent = c.description;
     const action = document.createElement("span");
-    action.className = "card-cta";
+    action.className = "card-cta" + (c.featured ? " holo-text" : "");
     action.textContent = live ? `${c.cta} →` : "Coming soon";
     card.append(icon, title, desc, action);
     if (c.twitch) {
