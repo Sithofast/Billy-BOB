@@ -1,0 +1,14 @@
+{
+  "contentrating": "Everyone",
+  "description": "Ultima Warriors mechs and a full fleet battle in space. Made for 5120 x 1440.",
+  "file": "index.html",
+  "preview": "preview.jpg",
+  "title": "Ultima Warriors - Fleet Battle",
+  "type": "web",
+  "general": {
+    "properties": {
+      "showhud": { "order": 0, "text": "Show Ultima Warriors title and kill counter", "type": "bool", "value": true },
+      "lowquality": { "order": 1, "text": "Low quality (for slower computers)", "type": "bool", "value": false }
+    }
+  }
+}

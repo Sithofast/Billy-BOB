@@ -10,6 +10,7 @@ The central website for all of the Ultima Warriors gaming communities. Our Disco
 | `site/` | The website itself: `index.html` (home), `support.html`, `forum.html`, `styles.css`, `script.js`, `forum.js`, and `assets/` (artwork) |
 | `netlify/functions/` | Small server programs Netlify runs: the support form → Discord (`submission-created.js`), the forum (`forum.mjs`), and Discord login (`auth.mjs`) |
 | `netlify/lib/` | Code shared by those functions |
+| `site/wallpaper/` | Animated 5120 × 1440 desktop wallpaper: mechs and a fleet battle (see its README) |
 | `tests/` | Automated checks (`npm test`) |
 | `netlify.toml` | Tells Netlify to publish `site/` and where the functions are |
 
