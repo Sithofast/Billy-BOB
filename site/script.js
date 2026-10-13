@@ -17,7 +17,7 @@ const COMMUNITIES = [
     name: "YouTube",
     icon: "▶️",
     description: "Highlights, funny moments, and game night recaps.",
-    url: "",
+    url: "https://www.youtube.com/@harebrn",
     cta: "Watch",
   },
   {
