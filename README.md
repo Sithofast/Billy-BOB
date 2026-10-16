@@ -89,6 +89,14 @@ Netlify is linked to this GitHub repository and publishes the `main` branch auto
 every change merged into `main` goes live within a minute or two. Pull requests get a preview
 link from Netlify before they're merged.
 
+## Search engines (Google)
+
+- `index.html` has a `google-site-verification` tag. It proves to Google Search Console that we own
+  the site, so don't remove it.
+- `site/sitemap.xml` lists the pages for Google, and `site/robots.txt` points search engines to it.
+  If you add a new page, add its address to `sitemap.xml` too. If the site moves to a custom
+  domain, update the addresses in both files.
+
 ## Running the checks
 
 ```sh
